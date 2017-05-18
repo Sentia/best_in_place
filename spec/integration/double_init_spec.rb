@@ -1,9 +1,8 @@
 # encoding: utf-8
-require "spec_helper"
 
 describe "Double initialization bug", :js => true do
   before do
-    @user = User.new :name => "Lucia",
+    @user = User.create :name => "Lucia",
       :last_name => "Napoli",
       :email => "lucianapoli@gmail.com",
       :height => "5' 5\"",
@@ -16,18 +15,17 @@ describe "Double initialization bug", :js => true do
   end
 
   it "should be able to change a boolean value" do
-    @user.save!
     visit double_init_user_path(@user)
 
     within("#receive_email") do
-      page.should have_content("No thanks")
+      expect(page).to have_content("No thanks")
     end
 
     bip_bool @user, :receive_email
 
     visit double_init_user_path(@user)
     within("#receive_email") do
-      page.should have_content("Yes of course")
+      expect(page).to have_content("Yes of course")
     end
 
   end
